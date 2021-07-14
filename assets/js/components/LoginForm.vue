@@ -52,6 +52,7 @@
                         //this.password = '';
                     }).catch(error => {
                         console.log(error.response.data);
+                        this.error = error.response.data.error ?? 'Unkown error';
                     }).finally(() => {
                         this.isLoading = false;
                     })
