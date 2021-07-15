@@ -27,7 +27,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "normalization_context"={"groups"={"cheese_listing:read", "cheese_listing:item:get"}},
  *          },
  *          "put" = {
- *              "access_control" = "is_granted('ROLE_USER')"
+ *              "access_control" = "is_granted('ROLE_USER') and object.getOwner() == user",
+ *              "access_control_message" = "only the creator can edit a cheese listing"
  *          },
  *          "delete" = {
  *              "access_control" = "is_granted('ROLE_ADMIN')"
