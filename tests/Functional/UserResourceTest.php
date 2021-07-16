@@ -41,4 +41,22 @@ class UserResourceTest extends CustomApiTestCase
             'username' => 'newusername',
         ]);
     }
+
+    public function testGetUser()
+    {
+        $client = self::createClient();
+        $user = $this->createUserAndLogIn($client, 'cheeseplease@example.com', 'foo');
+
+        $user->setPhoneNumber('555.123.4567');
+        $em = $this->getEntityManager();
+        $em->flush();
+
+        $client->request('GET', '/api/users/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'cheeseplease',
+        ]);
+
+        $data = $client->getResponse()->toArray();
+        $this->assertArrayNotHasKey('phoneNumber', $data);
+    }
 }
