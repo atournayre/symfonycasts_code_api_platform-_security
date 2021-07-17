@@ -22,19 +22,19 @@ class CheeseListingResourceTest extends CustomApiTestCase
         $this->assertResponseStatusCodeSame(401);
 
         $authenticatedUser = $this->createUserAndLogIn($client, 'cheese_tester@example.com', 'foo');
-        $otherUser = $this->createUserAndLogIn($client, 'otheruser@example.com', 'foo');
-
-        $client->request('POST', '/api/cheeses', [
-            'json' => [],
-        ]);
-
-        $this->assertResponseStatusCodeSame(400);
+        $otherUser = $this->createUser( 'otheruser@example.com', 'foo');
 
         $cheesyData = [
             'title' => 'Green cheese',
             'description' => 'cheese description',
             'price' => 5000,
         ];
+
+        $client->request('POST', '/api/cheeses', [
+            'json' => $cheesyData,
+        ]);
+
+        $this->assertResponseStatusCodeSame(400, 'missing owner');
 
         $client->request('POST', '/api/cheeses', [
             'json' => $cheesyData + ['owner' => '/api/users/'.$otherUser->getId()],
